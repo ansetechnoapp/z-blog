@@ -8,6 +8,7 @@ export function renderHeader(container) {
         <a href="#/" class="nav-link">Home</a>
         <a href="#/categories" class="nav-link">Categories</a>
         <a href="#/tags" class="nav-link">Tags</a>
+        <a href="#/docs" class="nav-link">Docs</a>
       </nav>
       <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
         <span class="theme-icon">${BLOG_CONFIG.THEME === 'dark' ? '☀' : '☾'}</span>

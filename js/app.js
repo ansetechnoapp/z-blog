@@ -7,6 +7,8 @@ import * as homeView from './views/home.js';
 import * as postView from './views/post.js';
 import * as categoryView from './views/category.js';
 import * as tagView from './views/tag.js';
+import * as docsView from './views/docs.js';
+import * as docPageView from './views/doc-page.js';
 import * as notFoundView from './views/not-found.js';
 
 async function main() {
@@ -37,6 +39,8 @@ async function main() {
     .on('/categories/:slug', (params) => categoryView.render(content, sidebar, params))
     .on('/tags', (params) => tagView.render(content, sidebar, params))
     .on('/tags/:slug', (params) => tagView.render(content, sidebar, params))
+    .on('/docs', (params) => docsView.render(content, sidebar, params))
+    .on('/docs/:slug', (params) => docPageView.render(content, sidebar, params))
     .notFound(() => notFoundView.render(content, sidebar));
 
   router.start();
