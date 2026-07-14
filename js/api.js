@@ -35,6 +35,25 @@ function blogUrl(path) {
   return `${BLOG_CONFIG.API_URL}/${path}`;
 }
 
+function normalizeAggregateResponse(response) {
+  const payload = response?.data;
+  if (
+    payload &&
+    typeof payload === 'object' &&
+    'data' in payload &&
+    payload.data &&
+    typeof payload.data === 'object'
+  ) {
+    return {
+      ...response,
+      data: payload.data,
+      metadata: payload.metadata ?? response.metadata,
+    };
+  }
+
+  return response;
+}
+
 export async function verifyConnection() {
   try {
     await request(blogUrl('posts'));
@@ -45,7 +64,8 @@ export async function verifyConnection() {
 }
 
 export async function getAll(page = 1, perPage = BLOG_CONFIG.POSTS_PER_PAGE) {
-  return request(blogUrl(`all?page=${page}&perPage=${perPage}`));
+  const response = await request(blogUrl(`all?page=${page}&perPage=${perPage}`));
+  return normalizeAggregateResponse(response);
 }
 
 export async function getPosts() {
