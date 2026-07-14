@@ -1,7 +1,7 @@
-import { getAll } from '../api.js';
-import { BLOG_CONFIG } from '../config.js';
-import { createPostCard } from '../components/post-card.js';
-import { renderSidebar } from '../components/sidebar.js';
+import { getAll } from '../api.js?v=9be2728';
+import { BLOG_CONFIG } from '../config.js?v=9be2728';
+import { createPostCard } from '../components/post-card.js?v=9be2728';
+import { renderSidebar } from '../components/sidebar.js?v=9be2728';
 
 export async function render(content, sidebar, params = {}) {
   const { slug } = params;

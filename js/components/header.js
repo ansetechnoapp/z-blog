@@ -1,4 +1,4 @@
-import { BLOG_CONFIG } from '../config.js';
+import { BLOG_CONFIG } from '../config.js?v=9be2728';
 
 export function renderHeader(container) {
   container.innerHTML = `

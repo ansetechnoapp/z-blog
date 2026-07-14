@@ -1,13 +1,13 @@
-import { verifyConnection } from './api.js';
-import { BLOG_CONFIG } from './config.js';
-import { Router } from './router.js';
-import { renderHeader } from './components/header.js';
-import { renderFooter } from './components/footer.js';
-import * as homeView from './views/home.js';
-import * as postView from './views/post.js';
-import * as categoryView from './views/category.js';
-import * as tagView from './views/tag.js';
-import * as notFoundView from './views/not-found.js';
+import { verifyConnection } from './api.js?v=9be2728';
+import { BLOG_CONFIG } from './config.js?v=9be2728';
+import { Router } from './router.js?v=9be2728';
+import { renderHeader } from './components/header.js?v=9be2728';
+import { renderFooter } from './components/footer.js?v=9be2728';
+import * as homeView from './views/home.js?v=9be2728';
+import * as postView from './views/post.js?v=9be2728';
+import * as categoryView from './views/category.js?v=9be2728';
+import * as tagView from './views/tag.js?v=9be2728';
+import * as notFoundView from './views/not-found.js?v=9be2728';
 
 async function main() {
   const header = document.getElementById('blog-header');

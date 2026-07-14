@@ -1,5 +1,5 @@
-import { getPostBySlug } from '../api.js';
-import { BLOG_CONFIG } from '../config.js';
+import { getPostBySlug } from '../api.js?v=9be2728';
+import { BLOG_CONFIG } from '../config.js?v=9be2728';
 
 function renderComments(comments) {
   if (!Array.isArray(comments) || comments.length === 0) return '';
