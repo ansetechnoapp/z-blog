@@ -2,6 +2,9 @@
   "name": "z-blog",
   "main": "worker.js",
   "compatibility_date": "2026-07-18",
+  "routes": [
+    { "pattern": "blog.zodev.live", "custom_domain": true }
+  ],
   "assets": {
     "directory": ".",
     "binding": "ASSETS"
