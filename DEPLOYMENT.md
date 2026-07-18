@@ -27,6 +27,23 @@ bun test
 wrangler deploy
 ```
 
+## Déploiement automatique GitHub
+
+Le workflow `.github/workflows/deploy.yml` déploie automatiquement chaque push sur `main` et peut aussi être lancé avec `workflow_dispatch`. Il exécute les tests, vérifie le bundle public, configure les secrets Worker puis lance Wrangler.
+
+Configurer dans les paramètres GitHub du dépôt :
+
+- `CLOUDFLARE_API_TOKEN` : token Cloudflare autorisé à déployer les Workers et leurs routes ;
+- `CLOUDFLARE_ACCOUNT_ID` : identifiant du compte Cloudflare ;
+- `ZODBACK_API_TOKEN` : nouveau token ZodBack project-scoped, projet `1`, entité `blog`, permission `read`.
+
+Variables GitHub optionnelles :
+
+- `ZODBACK_API_BASE_URL` (défaut : `https://integrations-api.zodev.live`) ;
+- `ZODBACK_PROJECT_ID` (défaut : `1`).
+
+Les secrets sont injectés par le workflow avec `wrangler secret put`. Ils ne sont ni commités dans GitHub, ni inclus dans les assets ou le bundle navigateur.
+
 Contrôles post-déploiement :
 
 ```bash
