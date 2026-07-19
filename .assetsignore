@@ -1,0 +1,11 @@
+.git/
+.github/
+.wrangler/
+useless/
+
+wrangler.jsonc
+worker.js
+worker.test.js
+
+*.md
+**/*.test.js

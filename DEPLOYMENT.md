@@ -1,48 +1,50 @@
 # Déploiement Cloudflare de ELEVARE
 
-Le site doit être déployé avec le Worker défini dans `worker.js` et `wrangler.jsonc`. Le navigateur ne connaît que `/api/blog/v1/public/*`; le Worker appelle `https://integrations-api.zodev.live` avec le token Blog du projet `1`.
+Le site est déployé par **Cloudflare Workers Builds**, connecté au dépôt GitHub `ansetechnoapp/z-blog`. Le Worker défini dans `worker.js` sert les assets statiques et proxyfie uniquement `/api/blog/v1/public/*` vers `https://integrations-api.zodev.live`.
 
-Configurer les secrets dans l’environnement Cloudflare, jamais dans un fichier JavaScript public :
+## Configuration Cloudflare
 
-```bash
-wrangler secret put ZODBACK_API_TOKEN
-wrangler secret put ZODBACK_API_BASE_URL
-wrangler secret put ZODBACK_PROJECT_ID
+Dans le Worker `z-blog` :
+
+```text
+Settings → Variables and secrets → Add
 ```
 
-Valeurs attendues :
+Ajouter dans l’environnement **Production**, comme secrets runtime :
 
-- `ZODBACK_API_BASE_URL` : `https://integrations-api.zodev.live` ;
-- `ZODBACK_PROJECT_ID` : `1` ;
-- `ZODBACK_API_TOKEN` : nouveau token API project-scoped, entité `blog`, permission `read`.
+- `ZODBACK_API_BASE_URL` : `https://integrations-api.zodev.live`
+- `ZODBACK_API_TOKEN` : nouveau token project-scoped, projet `1`, entité `blog`, permission `read`
+- `ZODBACK_PROJECT_ID` : `1`
 
-Le token qui était présent dans l’ancien `js/config.js` doit être révoqué avant le déploiement. Vérifier ensuite que le bundle SPA ne contient ni token, ni `Authorization`, ni `x-api-key`.
+Ces trois noms doivent rester alignés avec `secrets.required` dans `wrangler.jsonc`.
 
-Déploiement depuis ce checkout :
+Dans `Settings → Build` :
+
+- branche de production : `main` ;
+- commande de déploiement : `npx wrangler deploy` ;
+- désactiver les builds des branches non-production tant que les previews ne sont pas nécessaires ;
+- garder un seul système de déploiement : Cloudflare Workers Builds.
+
+Le workflow GitHub Actions de déploiement a été archivé dans `useless/github-workflows/deploy.yml` pour éviter une double publication concurrente.
+
+## Assets publics
+
+Le répertoire d’assets est la racine du dépôt pour conserver le site statique existant. `.assetsignore` exclut les fichiers internes qui ne doivent jamais être publiés : dépôt Git, configuration Wrangler, Worker serveur, tests, documentation et archives.
+
+Le token présent dans l’ancien `js/config.js` doit être considéré comme compromis et révoqué après validation du nouveau Worker. Aucun token, header `Authorization` ou header `x-api-key` ne doit apparaître dans le bundle SPA.
+
+## Vérifications locales
+
+```bash
+bun test
+```
+
+Les contrôles de bundle peuvent être exécutés avant une fusion :
 
 ```bash
 bun build js/elevare.js --outfile /tmp/elevare.bundle.js
 bun build worker.js --outfile /tmp/blog-worker.bundle.js
-bun test
-wrangler deploy
 ```
-
-## Déploiement automatique GitHub
-
-Le workflow `.github/workflows/deploy.yml` déploie automatiquement chaque push sur `main` et peut aussi être lancé avec `workflow_dispatch`. Il exécute les tests, vérifie le bundle public, configure les secrets Worker puis lance Wrangler.
-
-Configurer dans les paramètres GitHub du dépôt :
-
-- `CLOUDFLARE_API_TOKEN` : token Cloudflare autorisé à déployer les Workers et leurs routes ;
-- `CLOUDFLARE_ACCOUNT_ID` : identifiant du compte Cloudflare ;
-- `ZODBACK_API_TOKEN` : nouveau token ZodBack project-scoped, projet `1`, entité `blog`, permission `read`.
-
-Variables GitHub optionnelles :
-
-- `ZODBACK_API_BASE_URL` (défaut : `https://integrations-api.zodev.live`) ;
-- `ZODBACK_PROJECT_ID` (défaut : `1`).
-
-Les secrets sont injectés par le workflow avec `wrangler secret put`. Ils ne sont ni commités dans GitHub, ni inclus dans les assets ou le bundle navigateur.
 
 Contrôles post-déploiement :
 
