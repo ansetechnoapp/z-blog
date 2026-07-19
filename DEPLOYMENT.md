@@ -22,7 +22,7 @@ Settings → Variables and secrets → Add
 Ajouter dans l’environnement **Production**, comme secrets runtime :
 
 - `ZODBACK_API_BASE_URL` : `https://integrations-api.zodev.live`
-- `ZODBACK_API_TOKEN` : nouveau token project-scoped, projet `1`, entité `blog`, permission `read`
+- `ZODBACK_API_TOKEN` : token `blog3`, project-scoped, projet `1`, entité `blog`, permission `read` uniquement
 - `ZODBACK_PROJECT_ID` : `1`
 
 Ces trois noms doivent rester alignés avec `secrets.required` dans `wrangler.jsonc`.
@@ -44,7 +44,7 @@ Le workflow GitHub Actions de déploiement a été archivé dans `useless/github
 
 Le répertoire d’assets est la racine du dépôt pour conserver le site statique existant. `.assetsignore` exclut les fichiers internes qui ne doivent jamais être publiés : dépôt Git, configuration Wrangler, Worker serveur, tests, documentation et archives.
 
-L’ancien token présent dans `js/config.js` a été révoqué. Aucun token, header
+Les anciens tokens `blog1` et `blog2` ont été révoqués. Aucun token, header
 `Authorization` ou header `x-api-key` ne doit apparaître dans le bundle SPA.
 
 Les réglages SEO du projet `1` doivent utiliser `https://blog.zodev.live` comme
