@@ -1,32 +1,40 @@
-# ELEVARE — interface éditoriale
+# ELEVARE — blog public alimenté par ZodBack
 
-Cette version est une démonstration autonome en HTML, CSS et JavaScript natifs.
+Ce dépôt est la source GitHub `ansetechnoapp/z-blog` du Worker Cloudflare qui sert
+`https://blog.zodev.live`. `/opt/zodback/dev/z-blog` est uniquement un checkout
+local de ce dépôt : une modification locale n’arrive en production qu’après un
+push sur `main`, puis le build Cloudflare Workers Builds.
 
-## Exécution locale
+## Flux de données de production
 
-Depuis le dossier du projet :
-
-```bash
-python3 -m http.server 4173
+```text
+navigateur
+  └─ /api/blog/v1/public/* (same-origin)
+       └─ worker.js
+            └─ integrations-api.zodev.live
+                 └─ ZodBack — module Blog — projet 1
 ```
 
-Puis ouvrir [http://localhost:4173](http://localhost:4173).
+Le navigateur ne connaît ni l’URL interne de l’API ni le token. Le Worker
+injecte `ZODBACK_API_TOKEN` et `ZODBACK_PROJECT_ID` côté serveur. L’entrée active
+est `index.html` → `js/elevare.js` → `js/elevare-api.js`.
 
-Un serveur HTTP est recommandé plutôt que l’ouverture directe du fichier HTML : il permet de charger correctement le script et les ressources dans tous les navigateurs modernes.
+Les fichiers `js/app.js`, `js/api.js`, `css/` et `js/views/` proviennent de
+l’ancienne interface Blog et ne sont pas chargés par l’entrée ELEVARE actuelle.
+Ils sont conservés pour compatibilité historique, mais ne doivent pas être
+utilisés pour diagnostiquer le runtime de production.
 
-## Organisation
+## Vérifications avec Bun
 
-- `index.html` : point d'entrée minimal de l'application.
-- `styles/main.css` : design system ELEVARE, composants, états et responsive desktop/tablette/mobile.
-- `js/elevare.js` : données, composants partagés et navigation SPA pour accueil, articles, article, catégorie, auteur, recherche, archives, à propos, contact, newsletter, connexion, inscription, compte, administration, 404 et maintenance.
+```bash
+bun test
+bun scripts/verify-production.js
+```
 
-Les images de démonstration sont chargées depuis des URL publiques (`picsum.photos`). Pour une version totalement hors ligne, remplacer ces URL par des fichiers locaux.
+Le second contrôle vérifie la page live, le bundle public, l’agrégat Blog du
+projet `1`, le détail d’article, les taxonomies, la recherche, les archives et
+les flux SEO. Il ne nécessite aucun secret.
 
-## Vérifications effectuées
-
-- Syntaxe JavaScript validée avec `node --check js/elevare.js`.
-- Chargement HTTP local vérifié avec `python3 -m http.server` et une requête `curl`.
-- Le CSS contient des paliers responsive à 1000 px, 720 px et 420 px.
-- Smoke E2E Chromium validé sur l'accueil, une page article, la recherche, le formulaire contact, les routes principales et le menu mobile.
-
-Le test E2E a été exécuté dans Chromium. Une vérification visuelle manuelle reste recommandée dans Firefox, Safari et Edge sur les appareils cibles.
+Pour un aperçu statique local, utiliser un serveur HTTP (par exemple
+`bunx serve .`). Cela ne reproduit pas le proxy Cloudflare ; la vérification
+réelle du raccordement API est `bun scripts/verify-production.js`.
