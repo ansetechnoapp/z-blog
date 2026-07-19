@@ -7,14 +7,7 @@ async function request(url) {
   const hit = cache.get(url);
   if (hit && now - hit.t < BLOG_CONFIG.CACHE_DURATION) return hit.d;
 
-  const headers = { 'Content-Type': 'application/json' };
-  if (BLOG_CONFIG.API_TOKEN) {
-    headers['Authorization'] = `Bearer ${BLOG_CONFIG.API_TOKEN}`;
-    headers['x-api-key'] = BLOG_CONFIG.API_TOKEN;
-  }
-  if (BLOG_CONFIG.PROJECT_ID) {
-    headers['X-Project-Id'] = BLOG_CONFIG.PROJECT_ID;
-  }
+  const headers = { Accept: 'application/json' };
 
   try {
     const res = await fetch(url, { headers });

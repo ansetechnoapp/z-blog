@@ -1,0 +1,19 @@
+{
+  "name": "z-blog",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-18",
+  "routes": [
+    { "pattern": "blog.zodev.live", "custom_domain": true }
+  ],
+  "secrets": {
+    "required": [
+      "ZODBACK_API_BASE_URL",
+      "ZODBACK_API_TOKEN",
+      "ZODBACK_PROJECT_ID"
+    ]
+  },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  }
+}
